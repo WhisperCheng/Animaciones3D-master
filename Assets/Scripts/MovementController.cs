@@ -10,10 +10,14 @@ public class MovementController : MonoBehaviour
 
     private CharacterController characterController;
     private Animator animatorController;
+    bool sustoCooldown;
+
+    Enemigo enemigo;
 
     void Start()
     {
-
+        sustoCooldown = true;
+        enemigo = GameObject.Find("enemigo").GetComponent<Enemigo>();
         characterController = GetComponent<CharacterController>();
         animatorController = GetComponent<Animator>();
     }
@@ -29,9 +33,13 @@ public class MovementController : MonoBehaviour
         // Nos movemos usando el characterController
         Vector3 move = transform.forward * vertical;
         characterController.Move(move * speed * Time.deltaTime);
-
-
         // TODO: Establecer las transiciones.
         animatorController.SetFloat("Velocidad", vertical);
+        animatorController.SetBool("Asustado", enemigo.detectadoEnemigo);
+        animatorController.SetBool("Cooldown", sustoCooldown);
+        if (enemigo.detectadoEnemigo == true) 
+        {
+            sustoCooldown = false;
+        }
     }
    }
